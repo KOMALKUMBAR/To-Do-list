@@ -3,6 +3,8 @@ package com.android1.my_to_do
 import android.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
@@ -15,6 +17,7 @@ import com.android1.my_to_do.Adpter.ToDoListAdpter
 import com.android1.my_to_do.VIewModel.ToDoListViewModel
 import com.android1.my_to_do.databinding.ActivityMainBinding
 import com.android1.my_to_do.model.Todo
+import java.util.Objects
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
@@ -40,27 +43,36 @@ class MainActivity : AppCompatActivity() {
         // Apply the adapter to the spinner
         binding.spinner.adapter = adapter
 
-        // Optionally, set a listener to handle item selection
+        // set a listener to handle item selection
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val selectedItem = parent?.getItemAtPosition(position).toString()
                 filterBySpinner(selectedItem)
-                // Do something with the selected item
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do something when nothing is selected
+
             }
         }
 
-        binding.editTextSearch.setOnKeyListener { _, keyCode, _ ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                filterToDoList()
-                true
-            } else {
-                false
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // This method is called to notify you that, within `s`, the `count` characters
+                // beginning at `start` are about to be replaced by new text with length `after`.
             }
-        }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+                val text = s.toString()
+                filterToDoList(text)
+                // Do something with the updated text//eda
+            }
+        })
 
     }
 
@@ -71,8 +83,8 @@ class MainActivity : AppCompatActivity() {
         toDoListAdpter.notifyDataSetChanged()
     }
 
-    private fun filterToDoList() {
-        val query = binding.editTextSearch.text.toString().trim()
+    private fun filterToDoList(query:String) {
+       // val query = binding.editTextSearch.text.toString().trim()
 
         var list:List<Todo> = viewModel.filterToDoList(query)
         toDoListAdpter.setTodoList(list)
@@ -80,9 +92,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private  fun initRecyclerView(){
-       // recyclerView.layoutManager=LinearLayoutManager(this)
-       // recyclerViewcyclerView.adapter =
-
         toDoListAdpter = ToDoListAdpter()
         binding.recyclerview.apply {
             layoutManager = LinearLayoutManager(applicationContext)
@@ -90,9 +99,10 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel = ViewModelProvider(this)[ToDoListViewModel::class.java]
         viewModel.makeAPICall()
+
         viewModel.observeMovieLiveData().observe(this, Observer { todoList ->
+            binding.prograssBar.visibility=View.GONE
             toDoListAdpter.setTodoList(todoList.todos)
         })
-
     }
 }

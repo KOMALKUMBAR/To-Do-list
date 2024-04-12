@@ -24,7 +24,6 @@ class ToDoListViewModel:ViewModel(){
         RetrofitHelper.api.getJson().enqueue(object  : Callback<JsonData>{
             override fun onResponse(call: Call<JsonData>, response: Response<JsonData>) {
                 if (response.body()!=null){
-                   // movieLiveData.value = response.body()!!.results
                     toDoListViewModel.value = response.body()!!
                 }
                 else{
@@ -50,7 +49,6 @@ class ToDoListViewModel:ViewModel(){
                     it.todo.contains(query, ignoreCase = true)
                 } ?: emptyList()
         }
-
     }
 
     fun filterBySpinnerToDoList(selectedItem: String): List<Todo> {

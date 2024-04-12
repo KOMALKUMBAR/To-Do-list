@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
 <LinearLayout
+    android:id="@+id/llSearch"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -16,7 +16,7 @@
     <EditText
         android:id="@+id/editTextSearch"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="49dp"
         android:layout_weight="2"
         android:layout_margin="5dp"
         android:inputType="text"
@@ -28,7 +28,7 @@
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:padding="8dp"
         android:layout_gravity="center_vertical"
@@ -36,8 +36,10 @@
 </LinearLayout>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/llSearch"
         android:background="#000"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -45,7 +47,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-    android:layout_marginTop="5dp"/>
+    android:layout_marginTop="5dp"
+        android:layout_below="@+id/divider"/>
+
+    <ProgressBar
+        android:id="@+id/prograssBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:layout_centerInParent="true"/>
 
 
-</LinearLayout>
+</RelativeLayout>
